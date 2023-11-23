@@ -1,6 +1,7 @@
 // Buffer é uma representação de um espeçao na memória do computador, usado pra transitar de dados de uma maneira muito rápida
 // Após tratados eles são removidos
 // Sendo uma maneira performatica, por armazenar de forma binária
+// para escrever e ler
 
 
 const buf = Buffer.from("hello")
