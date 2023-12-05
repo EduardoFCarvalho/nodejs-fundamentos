@@ -1,18 +1,43 @@
+import fs from "node:fs/promises";
+
+// import.meta.url pega a url referencia do arquivo onde é chamada.
+
+const databasePath = new URL('../db.json', import.meta.url)
+
+
 export class Database {
   #database = {}
 
-select(table){
-  const data = this.#database[table] ?? []
+  constructor() {
+    fs.readFile(databasePath, 'utf8')
+      .then(data => {
+        this.#database = JSON.parse(data);
+      })
+      .catch(() => {
+        this.#persiste() // caso de erro e no momento de instanciar não encontre o arquivo ele cria
+      })
+  }
 
-  return data
-}
+  #persiste() {
+    fs.writeFile(databasePath, JSON.stringify(this.#database))
+  }
+
+  select(table) {
+    const data = this.#database[table] ?? []
+
+    return data
+  }
 
   insert(table, data) {
-    if (this.#database[table]){
+    console.log(this.#database);
+    if (Array.isArray(this.#database[table])) {
       this.#database[table].push(data)
     } else {
       this.#database[table] = [data]
     }
+
+    this.#persiste()
+
     return data
   }
 }
